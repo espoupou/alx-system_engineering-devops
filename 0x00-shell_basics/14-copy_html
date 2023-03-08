@@ -1,2 +1,0 @@
-#!/bin/bash
-yes | cp *.html .. 2> /dev/null
