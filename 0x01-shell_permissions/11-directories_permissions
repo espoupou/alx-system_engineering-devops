@@ -1,2 +1,3 @@
 #!/bin/bash
-mkdir -R ugo+x hello
+mkdir -R ugo+x ./*
+
