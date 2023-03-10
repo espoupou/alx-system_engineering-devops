@@ -1,2 +1,2 @@
 #!/bin/bash
-install -b -m 755 /dev/null my_dir
+install -b -m 751 /dev/null my_dir
