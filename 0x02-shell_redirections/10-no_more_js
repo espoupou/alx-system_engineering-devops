@@ -1,2 +1,2 @@
 #!/bin/bash
-rm $(find *js | grep "\.js") 2> /dev/null
+rm $(find . | grep "\.js") 2> /dev/null
