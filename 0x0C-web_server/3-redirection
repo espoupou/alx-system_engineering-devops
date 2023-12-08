@@ -5,14 +5,11 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 
-sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/luischaparroc permanent;/" /etc/nginx/sites-available/default
-service nginx start
-
 # Creating an index.html page
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
 # Performing a 301 Redirection
-sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com/\watch?v=QH2-TGUlwu4 permanent;/" /etc/nginx/sites-available/default
+sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;/" /etc/nginx/sites-available/default
 
 # Restarting Nginx service
 if [ "$(pgrep -c nginx)" -le 0 ]; then
