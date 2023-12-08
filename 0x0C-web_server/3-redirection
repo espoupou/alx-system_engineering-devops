@@ -5,22 +5,23 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 
+sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/luischaparroc permanent;/" /etc/nginx/sites-available/default
+service nginx start
+
 # Creating an index.html page
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
 # Performing a 301 Redirection
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com/\watch?v=QH2-TGUlwu4 permanent;/" /etc/nginx/sites-available/default
 
 # Restarting Nginx service
-sudo service nginx restart
+if [ "$(pgrep -c nginx)" -le 0 ]; then
+	sudo service nginx start
+else
+	sudo service nginx restart
+fi
 
-#apt-get update
-#apt-get -y install nginx
-#sudo ufw allow 'Nginx HTTP'
-#mkdir -p /var/www/html/
-sudo chmod -R 755 /var/www
-#echo 'Hello World!' > /var/www/html/index.html
+#sudo chmod -R 755 /var/www
 #SERVER_CONFIG=\
 #"server {
 #	listen 80 default_server;
@@ -32,7 +33,7 @@ sudo chmod -R 755 /var/www
 #		try_files \$uri \$uri/ =404;
 #	}
 #	if (\$request_filename ~ redirect_me){
-#		rewrite ^ https://sketchfab.com/bluepeno/models permanent;
+#		rewrite ^ https://link permanent;
 #	}
 #}"
 
