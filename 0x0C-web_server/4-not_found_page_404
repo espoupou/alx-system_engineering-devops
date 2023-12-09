@@ -27,10 +27,12 @@ new_config=\
         }
 }
 "
-sudo echo "Ceci n'est pas une page<br\>" > /var/www/html/404.html
+sudo echo "Ceci n'est pas une page
+" > /var/www/html/404.html
 sudo echo "$new_config" > /etc/nginx/sites-available/default
 
-if [ "$(pgrep nginx)" -le 0 ];
+pgrep nginx
+if [ "$(echo $?)" -le 0 ];
 then
     sudo service nginx start
 else
