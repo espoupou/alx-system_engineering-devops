@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Configure my domain
+
+subdomains_all=( "www" "lb-01" "web-01" "web-02" )
+
+run_dig () {
+    subdomain=$1
+    domain=$2
+
+    dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | tail -1 | awk -v s="$subdomain" 'BEGIN { FS = " " } ; { print "The subdomain " s " is a " $4 " record and points to " $5 }'
+}
+
+if [ $# -eq 1 ]; then
+    domain="$1"
+    for i in "${subdomains_all[@]}"
+    do
+	run_dig "$i" "$domain"
+    done
+elif [ $# -eq 2 ]; then
+    domain="$1"
+    subdomain="$2"
+    run_dig "$subdomain" "$domain"
+fi
