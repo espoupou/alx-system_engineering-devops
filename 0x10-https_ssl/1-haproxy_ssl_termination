@@ -42,16 +42,6 @@ defaults
         option http-server-close
 
 #--synux.tech-params-begin--
-backend synux.tech-backend
-        balance roundrobin
-        server 387934-web-01 100.26.173.10:80 check
-        server 387934-web-02 18.235.243.212:80 check
-frontend synux.tech-frontend
-        bind *:80
-        mode http
-        default_backend synux.tech-backend
-#--synux.tech-params-end--
-
 
 frontend www-http
    bind *:80
@@ -67,8 +57,10 @@ frontend www-https
 
 backend www-backend
    redirect scheme https if !{ ssl_fc }
+   balance roundrobin
    server 387934-web-01 100.26.173.10:80 check
    server 387934-web-02 18.235.243.212:80 check
+#--synux.tech-params-end--
 
 backend letsencrypt-backend
    server letsencrypt 127.0.0.1:54321
