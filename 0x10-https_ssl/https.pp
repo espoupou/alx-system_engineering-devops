@@ -1,4 +1,54 @@
-global
+# install HAproxy SSL termination
+
+# install nginx
+package { 'nginx':
+  ensure     => 'installed',
+}
+
+# free 80
+exec { 'free port 80':
+  command => "sudo service haproxy stop",
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+}
+
+# run certbot
+exec { 'run certbot':
+  command => "sudo certbot certonly --standalone --preferred-challenges http --http-01-port 80 -d synux.tech -d www.synux.tech",
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+}
+
+# Combine fullchain.pem and privkey.pem
+exec { 'run certbot':
+  command => "sudo mkdir -p /etc/haproxy/certs"
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+}
+
+exec { 'create the combined file':
+  command => "DOMAIN='synux.tech' sudo -E bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/haproxy/certs/$DOMAIN.pem'"
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+}
+
+exec { 'Secure access to the combined file':
+  command => "sudo chmod -R go-rwx /etc/haproxy/certs"
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+}
+
+# update software packages list
+exec { 'update packages':
+  command => 'apt-get update',
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+}
+
+# install haproxy
+package { 'haproxy':
+  ensure     => 'installed',
+}
+
+file { 'config file':
+  ensure  => file,
+  path    => '/etc/haproxy/haproxy.cfg',
+  content    =>
+"global
         log /dev/log    local0
         log /dev/log    local1 notice
         chroot /var/lib/haproxy
@@ -71,4 +121,5 @@ backend www-backend
    server 387934-web-02 18.235.243.212:80 check
 
 backend letsencrypt-backend
-   server letsencrypt 127.0.0.1:54321
+   server letsencrypt 127.0.0.1:54321"
+}
