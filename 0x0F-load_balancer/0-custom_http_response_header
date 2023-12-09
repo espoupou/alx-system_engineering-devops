@@ -4,18 +4,38 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 
+# Configuring the Uncomplicated Firewall (UFW) to allow incoming traffic for the Nginx HTTP service
+sudo ufw allow 'Nginx HTTP'
+
 # Creating an index.html page
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Performing a "moved permanently redirection" (301)
-new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/synux permanent;"
-sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
+# Performing a 301 Redirection
+sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;/" /etc/nginx/sites-available/default
 
-# Creating a 404 Custom error page
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
-
-sudo sed -i "s/listen 80 default_server;/$new_string/" /etc/nginx/sites-enabled/default
+new_config=\
+"server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+               root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+        server_name _;
+        location / {
+                try_files \$uri \$uri/ =404;
+        }
+        error_page 404 /404.html;
+        location  /404.html {
+            internal;
+        }
+        
+        if (\$request_filename ~ redirect_me){
+            rewrite ^ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;
+        }
+}
+"
+sudo echo "Ceci n'est pas une page
+" > /var/www/html/404.html
+sudo echo "$new_config" > /etc/nginx/sites-available/default
 
 # Creating an HTTP response header
 sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
@@ -24,4 +44,10 @@ sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/site
 sudo nginx -t
 
 # Restart nginx after implementing changes
-sudo service nginx restart
+pgrep nginx > /dev/null
+if [ "$(echo $?)" -le 0 ];
+then
+    sudo service nginx start
+else
+    sudo service nginx restart
+fi;
