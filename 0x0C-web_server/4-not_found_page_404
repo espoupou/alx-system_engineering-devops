@@ -31,7 +31,7 @@ sudo echo "Ceci n'est pas une page
 " > /var/www/html/404.html
 sudo echo "$new_config" > /etc/nginx/sites-available/default
 
-pgrep nginx
+pgrep nginx > /dev/null
 if [ "$(echo $?)" -le 0 ];
 then
     sudo service nginx start
