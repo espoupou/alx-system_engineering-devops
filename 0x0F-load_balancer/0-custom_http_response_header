@@ -39,7 +39,6 @@ sudo echo "$new_config" > /etc/nginx/sites-available/default
 
 # Creating an HTTP response header
 sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
-sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default
 
 # Testing configurations for syntax errors
 sudo nginx -t
