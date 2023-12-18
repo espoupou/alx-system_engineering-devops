@@ -41,34 +41,18 @@ defaults
         option forwardfor
         option http-server-close
 
-#--synux.tech-params-begin--
-backend synux.tech-backend
-        balance roundrobin
-        server 387934-web-01 100.26.173.10:80 check
-        server 387934-web-02 18.235.243.212:80 check
-frontend synux.tech-frontend
-        bind *:80
-        mode http
-        default_backend synux.tech-backend
-#--synux.tech-params-end--
+frontend www_frontend
+    bind *:80
+    bind *:443 ssl crt /etc/haproxy/certs/www.synux.tech.pem
+    http-request redirect scheme https unless { ssl_fc }
+    http-request set-header X-Forwarded-Proto https
+    default_backend www_backend
 
-
-frontend www-http
-   bind *:80
-   reqadd X-Forwarded-Proto:\ http
-   default_backend www-backend
-
-frontend www-https
-   bind *:443 ssl crt /etc/haproxy/certs/example.com.pem
-   reqadd X-Forwarded-Proto:\ https
-   acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-   use_backend letsencrypt-backend if letsencrypt-acl
-   default_backend www-backend
-
-backend www-backend
-   redirect scheme https if !{ ssl_fc }
-   server 387934-web-01 100.26.173.10:80 check
-   server 387934-web-02 18.235.243.212:80 check
+backend www_backend
+    balance roundrobin
+    
+    server 387934-web-01 100.26.173.10:80 check
+    server 387934-web-02 18.235.243.212:80  check
 
 backend letsencrypt-backend
-   server letsencrypt 127.0.0.1:54321
+    server letsencrypt 127.0.0.1:54321
