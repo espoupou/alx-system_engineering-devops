@@ -9,8 +9,8 @@ if __name__ == "__main__":
 
     user = '{}users/{}'.format(url, sys.argv[1])
     res = requests.get(user)
-    json_o = res.json()
-    print("Employee {} is done with tasks".format(json_o.get('name')), end="")
+    ujson = res.json()
+    print("Employee {} is done with tasks".format(u_json.get('name')), end="")
 
     todo = '{}todos?userId={}'.format(url, sys.argv[1])
     res = requests.get(todo)

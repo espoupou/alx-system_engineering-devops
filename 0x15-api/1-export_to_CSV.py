@@ -11,8 +11,7 @@ if __name__ == "__main__":
     userid = sys.argv[1]
     user = '{}users/{}'.format(url, userid)
     res = requests.get(user)
-    json_o = res.json()
-    name = json_o.get('username')
+    name = res.json().get('username')
 
     todo = '{}todos?userId={}'.format(url, userid)
     res = requests.get(todo)
@@ -20,9 +19,9 @@ if __name__ == "__main__":
     task_list = []
     for task in tasks:
         task_list.append([userid,
-                       name,
-                       task.get('completed'),
-                       task.get('title')])
+                         name,
+                         task.get('completed'),
+                         task.get('title')])
 
     filename = '{}.csv'.format(userid)
     with open(filename, mode='w') as file:

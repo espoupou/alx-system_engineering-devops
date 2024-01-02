@@ -11,8 +11,7 @@ if __name__ == "__main__":
     userid = sys.argv[1]
     user = '{}users/{}'.format(url, userid)
     res = requests.get(user)
-    user_json = res.json()
-    name = user_json.get('username')
+    name = res.json().get('username')
 
     todos = '{}todos?userId={}'.format(url, userid)
     res = requests.get(todos)
