@@ -21,5 +21,5 @@ if __name__ == "__main__":
             task_list.append(task)
 
     print("({}/{}):".format(len(task_list), len(tasks)))
-    for task in l_task:
+    for task in task_list:
         print("\t {}".format(task.get("title")))
