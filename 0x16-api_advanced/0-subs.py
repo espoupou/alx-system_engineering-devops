@@ -7,15 +7,22 @@ import sys
 
 def number_of_subscribers(subreddit):
     """ Queries to Reddit API """
-    u_agent = 'Mozilla/5.0'
+    u_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
 
     headers = {
         'User-Agent': u_agent,
     }
 
+    params = {
+        'after': None
+    }
+
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    res = requests.get(url, headers=headers, allow_redirects=False)
-    print(res)
+    res = requests.get(url,
+                       headers=headers,
+                       params=params,
+                       allow_redirects=False)
+
     if res.status_code != 200:
         return 0
     dic = res.json()
