@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""returns the number of subscribers for a given subreddit
+"""
+returns the number of subscribers for a given subreddit
 """
 import requests
 import sys
@@ -7,10 +8,10 @@ import sys
 
 def number_of_subscribers(subreddit):
     """ Queries to Reddit API """
-    u_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
 
     headers = {
-        'User-Agent': u_agent,
+        'User-Agent': user_agent,
     }
 
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
@@ -20,9 +21,10 @@ def number_of_subscribers(subreddit):
 
     if res.status_code != 200:
         return 0
+
     dic = res.json()
     if 'data' not in dic:
         return 0
     if 'subscribers' not in dic.get('data'):
         return 0
-    return res.json()['data']['subscribers']
+    return dic['data']['subscribers']
