@@ -8,7 +8,11 @@ def number_of_subscribers(subreddit):
     """ Queries to Reddit API """
 
     headers = {
+<<<<<<< HEAD
         'User-Agent': 'Mozilla/5.0',
+=======
+        'user-agent': user_agent,
+>>>>>>> 2d5997df73bb9e3c05113ca0073b958e88abe3d8
     }
 
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
