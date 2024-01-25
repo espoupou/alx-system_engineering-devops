@@ -6,17 +6,17 @@ import requests
 
 def number_of_subscribers(subreddit):
     """ Queries to Reddit API """
-    user_agent = 'Mozilla/5.0'
 
     headers = {
-        'User-Agent': user_agent,
+        'User-Agent': 'Mozilla/5.0',
     }
 
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    print(url)
     res = requests.get(url,
-                       headers=headers,
-                       allow_redirects=False)
-
+                       headers=headers)
+#                       allow_redirects=False)
+    print(res.content.decode())
     if res.status_code != 200:
         return 0
 
