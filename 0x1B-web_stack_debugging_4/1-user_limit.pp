@@ -1,12 +1,12 @@
 # Fix problem of high amount files opened
 
-exec {'replace-1':
+exec {'change':
   provider => shell,
   command  => 'sudo sed -i "s/nofile 5/nofile 50000/" /etc/security/limits.conf',
-  before   => Exec['replace-2'],
+  before   => Exec['second'],
 }
 
-exec {'replace-2':
+exec {'second':
   provider => shell,
   command  => 'sudo sed -i "s/nofile 4/nofile 40000/" /etc/security/limits.conf',
 }
